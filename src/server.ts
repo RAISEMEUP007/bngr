@@ -68,13 +68,13 @@ router.use("/getforecastdata/", async (req, res, next) => {
         {
           venue_name: 'E11even Miami',
           forecast: 'Very busy',
-          Acutal: 'Extremely busy (147%)',
+          Acutal: 'Extremely busy (70%)',
           Actual_value: 70
         },
         {
           venue_name: 'E11even Miami',
           forecast: 'Very busy',
-          Acutal: 'Extremely busy (147%)',
+          Acutal: 'Extremely busy (60%)',
           Actual_value: 60
         },
       ],
@@ -82,14 +82,14 @@ router.use("/getforecastdata/", async (req, res, next) => {
         {
           venue_name: 'E11even Miami',
           forecast: 'Very busy',
-          Acutal: 'Extremely busy (147%)',
+          Acutal: 'Extremely busy (40%)',
           Actual_value: 40
         },
         {
           venue_name: 'E11even Miami',
           forecast: 'Very busy',
-          Acutal: 'Extremely busy (147%)',
-          Actual_value: 120
+          Acutal: 'Extremely busy (30%)',
+          Actual_value: 30
         },
       ],
     }
