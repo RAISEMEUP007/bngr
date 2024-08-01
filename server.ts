@@ -99,7 +99,6 @@ router.use("/getforecastdata/", async (req, res, next) => {
 });
 
 router.use("/", (req, res, next) => {
-  console.log('he');
   res.status(404).json({ error: "page not found" });
 });
 
