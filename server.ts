@@ -23,7 +23,7 @@ const router = express.Router();
 
 router.use("/getforecastdata/", async (req, res, next) => {
   try {
-    const response = await fetch(`https://besttime.app/api/v1/venues?api_key_private=${process.env.BESTTIME_PRIVATE_KEY}`, {
+    const response = await fetch(`https://besttime.app/api/v1/collection/${process.env.COLLECTION_ID}?api_key_private=${process.env.BESTTIME_PRIVATE_KEY}`, {
       method: 'GET'
     });
 
