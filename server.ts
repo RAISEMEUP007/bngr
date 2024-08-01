@@ -23,77 +23,73 @@ const router = express.Router();
 
 router.use("/getforecastdata/", async (req, res, next) => {
   try {
-    // const response = await fetch(`https://besttime.app/api/v1/venues?api_key_private=pri_5c4a60134e994498a6214b94b1ee6bf6`, {
-    //   method: 'GET'
-    // });
+    const response = await fetch(`https://besttime.app/api/v1/venues?api_key_private=${process.env.BESTTIME_PRIVATE_KEY}`, {
+      method: 'GET'
+    });
 
-    // if (!response.ok) {
-    //   throw new Error('Failed to fetch data');
-    // }
+    if (!response.ok) {
+      throw new Error('Failed to fetch data');
+    }
 
-    // const venueList = await response.json();
-    // const forecasts = []
-    // for (const venue of venueList) {
-    //   const params = new URLSearchParams({
-    //     'api_key_private': 'pri_5c4a60134e994498a6214b94b1ee6bf6',
-    //     'venue_id': venue.venue_id
-    //   });
+    const venueList = await response.json();
+    const poppin = []
+    const hot = []
+    const dead = []
+    for (const venue of venueList) {
+      const params = new URLSearchParams({
+        'api_key_private': `${process.env.BESTTIME_PRIVATE_KEY}`,
+        'venue_id': venue.venue_id
+      });
 
-    //   const res = await fetch(`https://besttime.app/api/v1/forecasts/live?${params}`, {
-    //     method: 'POST'
-    //   });
+      const res = await fetch(`https://besttime.app/api/v1/forecasts/live?${params}`, {
+        method: 'POST'
+      });
 
-    //   if (!res.ok) {
-    //     throw new Error('Failed to fetch data');
-    //   }
+      if (!res.ok) {
+        throw new Error('Failed to fetch data');
+      }
 
-    //   const data = await res.json();
-    //   forecasts.push(data);
-    // }
+      const data = await res.json();
+      if(data.analysis.venue_forecasted_busyness >= 100 && data.analysis.venue_live_busyness >= 100){
+        poppin.push({
+          venue_id: venue.venue_id,
+          venue_name: venue.venue_name,
+          forecast: 'Very busy',
+          Acutal: `Extremely busy (${data.analysis.venue_live_busyness}%)`,
+          Actual_value: data.analysis.venue_live_busyness
+        })
+      }else if(data.analysis.venue_forecasted_busyness < 100 && data.analysis.venue_live_busyness >= 150){
+        poppin.push({
+          venue_id: venue.venue_id,
+          venue_name: venue.venue_name,
+          forecast: 'Not busy',
+          Acutal: `Extremely busy (${data.analysis.venue_live_busyness}%)`,
+          Actual_value: data.analysis.venue_live_busyness
+        })
+      }else if(data.analysis.venue_forecasted_busyness >= 100 && data.analysis.venue_live_busyness < 100){
+        hot.push({
+          venue_id: venue.venue_id,
+          venue_name: venue.venue_name,
+          forecast: 'Very busy',
+          Acutal: `Not busy (${data.analysis.venue_live_busyness}%)`,
+          Actual_value: data.analysis.venue_live_busyness
+        })
+      }else if(data.analysis.venue_forecasted_busyness < 100 && data.analysis.venue_live_busyness < 150){
+        dead.push({
+          venue_id: venue.venue_id,
+          venue_name: venue.venue_name,
+          forecast: 'Dead',
+          Acutal: `Dead (${data.analysis.venue_live_busyness}%)`,
+          Actual_value: data.analysis.venue_live_busyness
+        })
+      }
+      // forecastData.push(data);
+    }
 
     const forecasts = {
-      poppin: [
-        {
-          venue_name: 'E11even Miami',
-          forecast: 'Very busy',
-          Acutal: 'Extremely busy (147%)',
-          Actual_value: 180
-        },
-        {
-          venue_name: 'E11even Miami',
-          forecast: 'Very busy',
-          Acutal: 'Extremely busy (147%)',
-          Actual_value: 160
-        }
-      ],
-      hot: [
-        {
-          venue_name: 'E11even Miami',
-          forecast: 'Very busy',
-          Acutal: 'Extremely busy (70%)',
-          Actual_value: 70
-        },
-        {
-          venue_name: 'E11even Miami',
-          forecast: 'Very busy',
-          Acutal: 'Extremely busy (60%)',
-          Actual_value: 60
-        },
-      ],
-      dead: [
-        {
-          venue_name: 'E11even Miami',
-          forecast: 'Very busy',
-          Acutal: 'Extremely busy (40%)',
-          Actual_value: 40
-        },
-        {
-          venue_name: 'E11even Miami',
-          forecast: 'Very busy',
-          Acutal: 'Extremely busy (30%)',
-          Actual_value: 30
-        },
-      ],
+      poppin,
+      hot,
+      dead,
     }
 
     res.status(200).json(forecasts);
