@@ -1,5 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
+const https = require('https');
+const fs = require('fs');
 
 dotenv.config();
 
@@ -109,6 +111,13 @@ app.use(router);
 
 const PORT = process.env.PORT || 80;
 
-app.listen(PORT,()=>{
- console.log(`server is running on ${PORT}`);
+const options = {
+  key: fs.readFileSync(process.env.PRIVATEKEY_PATH),
+  cert: fs.readFileSync(process.env.CERT_PATH),
+};
+
+console.log(options);
+
+https.createServer(options, app).listen(PORT, () => {
+  console.log('Server listening on port ' + PORT);
 });
