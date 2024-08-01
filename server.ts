@@ -111,13 +111,13 @@ app.use(router);
 
 const PORT = process.env.PORT || 80;
 
-const options = {
-  key: fs.readFileSync(process.env.PRIVATEKEY_PATH),
-  cert: fs.readFileSync(process.env.CERT_PATH),
-};
+// const options = {
+//   key: fs.readFileSync(process.env.PRIVATEKEY_PATH),
+//   cert: fs.readFileSync(process.env.CERT_PATH),
+// };
 
-console.log(options);
+// console.log(options);
 
-https.createServer(options, app).listen(PORT, () => {
+app.listen(PORT, () => {
   console.log('Server listening on port ' + PORT);
 });
