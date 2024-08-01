@@ -109,15 +109,8 @@ router.use("/", (req, res, next) => {
 
 app.use(router);
 
-const PORT = process.env.PORT || 80;
+const PORT = process.env.PORT || 3000;
 
-const options = {
-  key: fs.readFileSync(process.env.PRIVATEKEY_PATH),
-  cert: fs.readFileSync(process.env.CERT_PATH),
-};
-
-console.log(options);
-
-https.createServer(options, app).listen(PORT, () => {
-  console.log('Server listening on port ' + PORT);
+app.listen(PORT,()=>{
+ console.log(`server is running on ${PORT}`);
 });
