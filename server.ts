@@ -158,7 +158,7 @@ router.get("/getforecastdata/", async (req, res, next) => {
         poppin.push({
           venue_id: venue_id,
           venue_name: data.venue_info.venue_name,
-          forecast: 'Very busy',
+          forecast: `Very busy (${data.analysis.venue_forecasted_busyness || 0}%)`,
           Acutal: `Extremely busy (${data.analysis.venue_live_busyness}%)`,
           Actual_value: data.analysis.venue_live_busyness
         })
@@ -166,7 +166,7 @@ router.get("/getforecastdata/", async (req, res, next) => {
         poppin.push({
           venue_id: venue_id,
           venue_name: data.venue_info.venue_name,
-          forecast: 'Not busy',
+          forecast: `Not busy (${data.analysis.venue_forecasted_busyness || 0}%)`,
           Acutal: `Extremely busy (${data.analysis.venue_live_busyness}%)`,
           Actual_value: data.analysis.venue_live_busyness
         })
@@ -174,7 +174,7 @@ router.get("/getforecastdata/", async (req, res, next) => {
         hot.push({
           venue_id: venue_id,
           venue_name: data.venue_info.venue_name,
-          forecast: 'Very busy',
+          forecast: `Very busy (${data.analysis.venue_forecasted_busyness || 0}%)`,
           Acutal: `Not busy (${data.analysis.venue_live_busyness}%)`,
           Actual_value: data.analysis.venue_live_busyness
         })
@@ -182,15 +182,15 @@ router.get("/getforecastdata/", async (req, res, next) => {
         dead.push({
           venue_id: venue_id,
           venue_name: data.venue_info.venue_name,
-          forecast: 'Dead',
-          Acutal: `Dead (${data.analysis.venue_live_busyness}%)`,
+          forecast: `Dead (${data.analysis.venue_forecasted_busyness || 0}%)`,
+          Acutal: `Dead (${data.analysis.venue_live_busyness || 0}%)`,
           Actual_value: data.analysis.venue_live_busyness
         })
       }else if(data.analysis.venue_live_busyness_available === false){
         dead.push({
           venue_id: venue_id,
           venue_name: data.venue_info.venue_name,
-          forecast: 'Dead',
+          forecast: `Dead (${data.analysis.venue_forecasted_busyness || 0}%)`,
           Acutal: `Dead (0%)`,
           Actual_value: 0
         })
@@ -244,7 +244,7 @@ router.get("/getforecasts/", async (req, res, next) => {
         poppin.push({
           venue_id: venue_id,
           venue_name: data.venue_info.venue_name,
-          forecast: 'Very busy',
+          forecast: `Very busy (${data.analysis.venue_forecasted_busyness || 0}%)`,
           Acutal: `Extremely busy (${data.analysis.venue_live_busyness}%)`,
           Actual_value: data.analysis.venue_live_busyness
         })
@@ -252,7 +252,7 @@ router.get("/getforecasts/", async (req, res, next) => {
         poppin.push({
           venue_id: venue_id,
           venue_name: data.venue_info.venue_name,
-          forecast: 'Not busy',
+          forecast: `Not busy (${data.analysis.venue_forecasted_busyness || 0}%)`,
           Acutal: `Extremely busy (${data.analysis.venue_live_busyness}%)`,
           Actual_value: data.analysis.venue_live_busyness
         })
@@ -260,7 +260,7 @@ router.get("/getforecasts/", async (req, res, next) => {
         hot.push({
           venue_id: venue_id,
           venue_name: data.venue_info.venue_name,
-          forecast: 'Very busy',
+          forecast: `Very busy (${data.analysis.venue_forecasted_busyness || 0}%)`,
           Acutal: `Not busy (${data.analysis.venue_live_busyness}%)`,
           Actual_value: data.analysis.venue_live_busyness
         })
@@ -268,15 +268,15 @@ router.get("/getforecasts/", async (req, res, next) => {
         dead.push({
           venue_id: venue_id,
           venue_name: data.venue_info.venue_name,
-          forecast: 'Dead',
-          Acutal: `Dead (${data.analysis.venue_live_busyness}%)`,
+          forecast: `Dead (${data.analysis.venue_forecasted_busyness || 0}%)`,
+          Acutal: `Dead (${data.analysis.venue_live_busyness || 0}%)`,
           Actual_value: data.analysis.venue_live_busyness
         })
       }else if(data.analysis.venue_live_busyness_available === false){
         dead.push({
           venue_id: venue_id,
           venue_name: data.venue_info.venue_name,
-          forecast: 'Dead',
+          forecast: `Dead (${data.analysis.venue_forecasted_busyness || 0}%)`,
           Acutal: `Dead (0%)`,
           Actual_value: 0
         })
