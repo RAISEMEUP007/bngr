@@ -21,6 +21,52 @@ app.use((_, res, next) => {
 
 const router = express.Router();
 
+router.get("/getcities/", async (req, res, next) => {
+  try {
+    const cities = [
+      {
+        id: 1,
+        name: 'Atlanta',
+      },
+      {
+        id: 2,
+        name: 'Boston',
+      },
+      {
+        id: 3,
+        name: 'Chicago',
+      },
+      {
+        id: 4,
+        name: 'Las Vegas',
+      },
+      {
+        id: 5,
+        name: 'Los Angeles',
+      },
+      {
+        id: 6,
+        name: 'Miami',
+      },
+      {
+        id: 7,
+        name: 'Nashuille',
+      },
+      {
+        id: 8,
+        name: 'New York',
+      },
+      {
+        id: 9,
+        name: 'Washington D.C.',
+      },
+    ]
+    res.status(200).json(cities);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+});
+
 router.get("/getforecastdata/", async (req, res, next) => {
   try {
     const venueIds =  [
