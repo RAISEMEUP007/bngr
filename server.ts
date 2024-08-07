@@ -21,47 +21,68 @@ app.use((_, res, next) => {
 
 const router = express.Router();
 
+const cities = [
+  {
+    id: 1,
+    name: 'Atlanta',
+    collection_id: '',
+  },
+  {
+    id: 2,
+    name: 'Boston',
+    collection_id: 'col_5888e3bbcd7c4a87a803f078e4e2b16c',
+  },
+  {
+    id: 3,
+    name: 'Chicago',
+    collection_id: '',
+  },
+  {
+    id: 4,
+    name: 'Las Vegas',
+    collection_id: '',
+  },
+  {
+    id: 5,
+    name: 'Los Angeles',
+    collection_id: '',
+  },
+  {
+    id: 6,
+    name: 'Miami',
+    collection_id: '',
+  },
+  {
+    id: 7,
+    name: 'Nashuille',
+    collection_id: '',
+  },
+  {
+    id: 8,
+    name: 'New York',
+    collection_id: 'col_85588aba7d7646a2bab167fa428c73ee',
+  },
+  {
+    id: 9,
+    name: 'Washington D.C.',
+    collection_id: '',
+  },
+  {
+    id: 10,
+    name: 'San francisco',
+    collection_id: 'col_0a97efad53044688b4b329b0d1b4a871',
+  },
+  {
+    id: 11,
+    name: 'Manhattan',
+    collection_id: 'col_35f814e1a77d4edea9bbb69ccc16c83a',
+  }
+]
+
 router.get("/getcities/", async (req, res, next) => {
   try {
-    const cities = [
-      {
-        id: 1,
-        name: 'Atlanta',
-      },
-      {
-        id: 2,
-        name: 'Boston',
-      },
-      {
-        id: 3,
-        name: 'Chicago',
-      },
-      {
-        id: 4,
-        name: 'Las Vegas',
-      },
-      {
-        id: 5,
-        name: 'Los Angeles',
-      },
-      {
-        id: 6,
-        name: 'Miami',
-      },
-      {
-        id: 7,
-        name: 'Nashuille',
-      },
-      {
-        id: 8,
-        name: 'New York',
-      },
-      {
-        id: 9,
-        name: 'Washington D.C.',
-      },
-    ]
-    res.status(200).json(cities);
+    const filteredCities = cities.filter(city => city.collection_id !== '').sort((a, b) => a.name.localeCompare(b.name));
+    res.status(200).json(filteredCities);
   } catch (error) {
     console.error('Error fetching data:', error);
   }
@@ -212,7 +233,10 @@ router.get("/getforecastdata/", async (req, res, next) => {
 
 router.get("/getforecasts/", async (req, res, next) => {
   try {
-    const collectionURL = `https://besttime.app/api/v1/collection/${process.env.COLLECTION_ID}?api_key_private=${process.env.BESTTIME_PRIVATE_KEY}`;
+    const { city_id } = req.query;
+    const city:any = cities.find((city:any) => city.id == city_id);
+    const collection_id = city.collection_id;
+    const collectionURL = `https://besttime.app/api/v1/collection/${collection_id}?api_key_private=${process.env.BESTTIME_PRIVATE_KEY}`;
     console.log(collectionURL);
     const response = await fetch(collectionURL, {
       method: 'GET'
@@ -232,56 +256,61 @@ router.get("/getforecasts/", async (req, res, next) => {
         'venue_id': venue_id
       });
 
-      const res = await fetch(`https://besttime.app/api/v1/forecasts/live?${params}`, {
+      const forecasts:any = await fetch(`https://besttime.app/api/v1/forecasts?${params}`, {
         method: 'POST'
       });
-      if (!res.ok) {
+      // console.log(`https://besttime.app/api/v1/forecasts?${params}`);
+      if (!forecasts.ok) {
         throw new Error('Failed to fetch data');
       }
+      const forecastsData = await forecasts.json();
 
-      const data = await res.json();
-      if(data.analysis.venue_forecasted_busyness >= 100 && data.analysis.venue_live_busyness >= 100){
-        poppin.push({
-          venue_id: venue_id,
-          venue_name: data.venue_info.venue_name,
-          forecast: `Very busy (${data.analysis.venue_forecasted_busyness || 0}%)`,
-          Acutal: `Extremely busy (${data.analysis.venue_live_busyness}%)`,
-          Actual_value: data.analysis.venue_live_busyness
-        })
-      }else if(data.analysis.venue_forecasted_busyness < 100 && data.analysis.venue_live_busyness >= 150){
-        poppin.push({
-          venue_id: venue_id,
-          venue_name: data.venue_info.venue_name,
-          forecast: `Not busy (${data.analysis.venue_forecasted_busyness || 0}%)`,
-          Acutal: `Extremely busy (${data.analysis.venue_live_busyness}%)`,
-          Actual_value: data.analysis.venue_live_busyness
-        })
-      }else if(data.analysis.venue_forecasted_busyness >= 100 && data.analysis.venue_live_busyness < 100){
-        hot.push({
-          venue_id: venue_id,
-          venue_name: data.venue_info.venue_name,
-          forecast: `Very busy (${data.analysis.venue_forecasted_busyness || 0}%)`,
-          Acutal: `Not busy (${data.analysis.venue_live_busyness}%)`,
-          Actual_value: data.analysis.venue_live_busyness
-        })
-      }else if(data.analysis.venue_forecasted_busyness < 100 && data.analysis.venue_live_busyness < 150){
-        dead.push({
-          venue_id: venue_id,
-          venue_name: data.venue_info.venue_name,
-          forecast: `Dead (${data.analysis.venue_forecasted_busyness || 0}%)`,
-          Acutal: `Dead (${data.analysis.venue_live_busyness || 0}%)`,
-          Actual_value: data.analysis.venue_live_busyness
-        })
-      }else if(data.analysis.venue_live_busyness_available === false){
-        dead.push({
-          venue_id: venue_id,
-          venue_name: data.venue_info.venue_name,
-          forecast: `Dead (${data.analysis.venue_forecasted_busyness || 0}%)`,
-          Acutal: `Dead (0%)`,
-          Actual_value: 0
-        })
+      const live = await fetch(`https://besttime.app/api/v1/forecasts/live?${params}`, {
+        method: 'POST'
+      });
+      if (!live.ok) {
+        throw new Error('Failed to fetch data');
       }
-      // forecastData.push(data);
+      const liveData = await live.json();
+
+      let today = new Date();
+      let todayWeekDay = today.getDay();
+      todayWeekDay = (todayWeekDay + 6) % 7;
+
+      let status = 'other';
+      if(forecastsData?.analysis[todayWeekDay]?.day_raw.some((item:number) => item>80)) status = 'forecasted';
+      if(liveData.analysis.venue_live_busyness > 80 && liveData.analysis.venue_live_forecasted_delta > 80) status = 'hot';
+      if(liveData.analysis.venue_live_busyness_available == 'no') status = 'closed';
+
+      switch(status){
+        case 'hot':
+          poppin.push({
+            venue_id: venue_id,
+            venue_name: liveData.venue_info.venue_name,
+            forecast: `Very busy (${liveData.analysis.venue_forecasted_busyness || 0}%)`,
+            Acutal: `Extremely busy (${liveData.analysis.venue_live_busyness}%)`,
+            Actual_value: liveData.analysis.venue_live_busyness
+          })
+          break;
+        case 'forecasted':
+          hot.push({
+            venue_id: venue_id,
+            venue_name: liveData.venue_info.venue_name,
+            forecast: `Very busy (${liveData.analysis.venue_forecasted_busyness || 0}%)`,
+            Acutal: `Not busy (${liveData.analysis.venue_live_busyness}%)`,
+            Actual_value: liveData.analysis.venue_live_busyness
+          })
+          break;
+        case 'other':
+          dead.push({
+            venue_id: venue_id,
+            venue_name: liveData.venue_info.venue_name,
+            forecast: `Dead (${liveData.analysis.venue_forecasted_busyness || 0}%)`,
+            Acutal: `Dead (${liveData.analysis.venue_live_busyness}%)`,
+            Actual_value: liveData.analysis.venue_live_busyness
+          })
+          break;
+      }
     }
 
     const forecasts = {
