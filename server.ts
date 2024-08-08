@@ -287,7 +287,7 @@ router.get("/getforecasts/", async (req, res, next) => {
           poppin.push({
             venue_id: venue_id,
             venue_name: liveData.venue_info.venue_name,
-            forecast: `Very busy (${liveData.analysis.venue_forecasted_busyness || 0}%)`,
+            forecast: `Very busy (${Math.max(...forecastsData.analysis[todayWeekDay].day_raw) || 0}%)`,
             Acutal: `Extremely busy (${liveData?.analysis?.venue_live_busyness??0}%)`,
             Actual_value: liveData?.analysis?.venue_live_busyness??0
           })
@@ -296,7 +296,7 @@ router.get("/getforecasts/", async (req, res, next) => {
           hot.push({
             venue_id: venue_id,
             venue_name: liveData.venue_info.venue_name,
-            forecast: `Very busy (${liveData.analysis.venue_forecasted_busyness || 0}%)`,
+            forecast: `Very busy (${Math.max(...forecastsData.analysis[todayWeekDay].day_raw) || 0}%)`,
             Acutal: `Not busy (${liveData?.analysis?.venue_live_busyness??0}%)`,
             Actual_value: liveData?.analysis?.venue_live_busyness??0
           })
@@ -305,7 +305,7 @@ router.get("/getforecasts/", async (req, res, next) => {
           dead.push({
             venue_id: venue_id,
             venue_name: liveData.venue_info.venue_name,
-            forecast: `Dead (${liveData.analysis.venue_forecasted_busyness || 0}%)`,
+            forecast: `Dead (${Math.max(...forecastsData.analysis[todayWeekDay].day_raw) || 0}%)`,
             Acutal: `Dead (${liveData?.analysis?.venue_live_busyness??0}%)`,
             Actual_value: liveData?.analysis?.venue_live_busyness??0
           })
