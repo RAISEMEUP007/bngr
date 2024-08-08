@@ -280,7 +280,7 @@ router.get("/getforecasts/", async (req, res, next) => {
       let status = 'other';
       if(forecastsData?.analysis[todayWeekDay]?.day_raw.some((item:number) => item>80)) status = 'forecasted';
       if(liveData.analysis.venue_live_busyness > 80 && liveData.analysis.venue_live_forecasted_delta > 80) status = 'hot';
-      if(liveData.analysis.venue_live_busyness_available == 'no') status = 'closed';
+      if(liveData?.analysis?.venue_live_busyness_available == 'no') status = 'closed';
 
       switch(status){
         case 'hot':
@@ -288,8 +288,8 @@ router.get("/getforecasts/", async (req, res, next) => {
             venue_id: venue_id,
             venue_name: liveData.venue_info.venue_name,
             forecast: `Very busy (${liveData.analysis.venue_forecasted_busyness || 0}%)`,
-            Acutal: `Extremely busy (${liveData.analysis.venue_live_busyness}%)`,
-            Actual_value: liveData.analysis.venue_live_busyness
+            Acutal: `Extremely busy (${liveData?.analysis?.venue_live_busyness??0}%)`,
+            Actual_value: liveData?.analysis?.venue_live_busyness??0
           })
           break;
         case 'forecasted':
@@ -297,8 +297,8 @@ router.get("/getforecasts/", async (req, res, next) => {
             venue_id: venue_id,
             venue_name: liveData.venue_info.venue_name,
             forecast: `Very busy (${liveData.analysis.venue_forecasted_busyness || 0}%)`,
-            Acutal: `Not busy (${liveData.analysis.venue_live_busyness}%)`,
-            Actual_value: liveData.analysis.venue_live_busyness
+            Acutal: `Not busy (${liveData?.analysis?.venue_live_busyness??0}%)`,
+            Actual_value: liveData?.analysis?.venue_live_busyness??0
           })
           break;
         case 'other':
@@ -306,8 +306,8 @@ router.get("/getforecasts/", async (req, res, next) => {
             venue_id: venue_id,
             venue_name: liveData.venue_info.venue_name,
             forecast: `Dead (${liveData.analysis.venue_forecasted_busyness || 0}%)`,
-            Acutal: `Dead (${liveData.analysis.venue_live_busyness}%)`,
-            Actual_value: liveData.analysis.venue_live_busyness
+            Acutal: `Dead (${liveData?.analysis?.venue_live_busyness??0}%)`,
+            Actual_value: liveData?.analysis?.venue_live_busyness??0
           })
           break;
       }
