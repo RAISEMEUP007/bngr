@@ -31,7 +31,7 @@ const cities = [
   {
     id: 2,
     name: 'Boston',
-    shortName: 'BOS',
+    shortName: 'bos',
     collection_id: 'col_5888e3bbcd7c4a87a803f078e4e2b16c',
   },
   {
@@ -62,7 +62,7 @@ const cities = [
   {
     id: 8,
     name: 'New York',
-    shortName: 'NYC',
+    shortName: 'nyc',
     collection_id: 'col_85588aba7d7646a2bab167fa428c73ee',
   },
   {
@@ -73,13 +73,13 @@ const cities = [
   {
     id: 10,
     name: 'San francisco',
-    shortName: 'SF',
+    shortName: 'sf',
     collection_id: 'col_0a97efad53044688b4b329b0d1b4a871',
   },
   {
     id: 11,
     name: 'Manhattan',
-    shortName: 'MAN',
+    shortName: 'man',
     collection_id: 'col_35f814e1a77d4edea9bbb69ccc16c83a',
   }
 ]
