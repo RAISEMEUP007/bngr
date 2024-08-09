@@ -283,9 +283,9 @@ router.get("/getforecasts/", async (req, res, next) => {
       todayWeekDay = (todayWeekDay + 6) % 7;
 
       let status = 'other';
-      if(forecastsData?.analysis[todayWeekDay]?.day_raw.some((item:number) => item>80)) status = 'forecasted';
-      if(liveData.analysis.venue_live_busyness > 80 && liveData.analysis.venue_live_forecasted_delta > 80) status = 'hot';
-      if(liveData?.analysis?.venue_live_busyness_available == 'no') status = 'closed';
+      if(liveData.analysis.venue_live_busyness > 80 || liveData.analysis.venue_live_forecasted_delta > 80) status = 'hot';
+      else if(forecastsData?.analysis[todayWeekDay]?.day_raw.some((item:number) => item>80)) status = 'forecasted';
+      else if(liveData?.analysis?.venue_live_busyness_available == 'no') status = 'closed';
 
       switch(status){
         case 'hot':
