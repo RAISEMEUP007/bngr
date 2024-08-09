@@ -294,7 +294,8 @@ router.get("/getforecasts/", async (req, res, next) => {
             venue_name: liveData.venue_info.venue_name,
             forecast: `Very busy (${Math.max(...forecastsData.analysis[todayWeekDay].day_raw) || 0}%)`,
             Acutal: `Extremely busy (${liveData?.analysis?.venue_live_busyness??0}%)`,
-            Actual_value: liveData?.analysis?.venue_live_busyness??0
+            Actual_value: liveData?.analysis?.venue_live_busyness??0,
+            typical_value: Math.max(...forecastsData.analysis[todayWeekDay].day_raw),
           })
           break;
         case 'forecasted':
@@ -303,7 +304,8 @@ router.get("/getforecasts/", async (req, res, next) => {
             venue_name: liveData.venue_info.venue_name,
             forecast: `Very busy (${Math.max(...forecastsData.analysis[todayWeekDay].day_raw) || 0}%)`,
             Acutal: `Not busy (${liveData?.analysis?.venue_live_busyness??0}%)`,
-            Actual_value: liveData?.analysis?.venue_live_busyness??0
+            Actual_value: liveData?.analysis?.venue_live_busyness??0,
+            typical_value: Math.max(...forecastsData.analysis[todayWeekDay].day_raw),
           })
           break;
         case 'other':
@@ -312,7 +314,8 @@ router.get("/getforecasts/", async (req, res, next) => {
             venue_name: liveData.venue_info.venue_name,
             forecast: `Dead (${Math.max(...forecastsData.analysis[todayWeekDay].day_raw) || 0}%)`,
             Acutal: `Dead (${liveData?.analysis?.venue_live_busyness??0}%)`,
-            Actual_value: liveData?.analysis?.venue_live_busyness??0
+            Actual_value: liveData?.analysis?.venue_live_busyness??0,
+            typical_value: Math.max(...forecastsData.analysis[todayWeekDay].day_raw),
           })
           break;
       }
